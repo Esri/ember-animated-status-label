@@ -25,6 +25,7 @@ export default Component.extend(Fadable, {
 
   confirmationText: '',
   confirmationClassName: '',
+  confirmationIconName: 'check-circle',
 
   status: StatusLabelState.SETTLED,
 

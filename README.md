@@ -46,11 +46,12 @@ The animated-status-label component supports the following properties:
 Property               | Purpose
 ---------------------  | -------------
 `promise`              | A [Promises/A+](https://promisesaplus.com/) compliant implementation.
-`pendingText`          | Text that will display while the promise is in a pending state
+`pendingText`          | Text that will display while the promise is in a pending state.
 `confirmationText`     | Text that will display immediately after the promise enters a settled state.
 `pendingClassName`     | CSS class name(s) to append to container span during pending state.
 `confirmationClassName`| CSS class name(s) to append to container span immediately after the promise enters a settled state.
 `confirmationAnimationFinished`| An action to be called after the confirmation animation has completed.
+`confirmationIconName` | FontAwesome icon name to use for the confirmation icon.
 
 ## Running
 
