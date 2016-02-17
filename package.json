@@ -15,7 +15,16 @@
   "engines": {
     "node": ">= 0.10.0"
   },
-  "author": "",
+  "contributors": [
+    {
+      "name": "Jack Rowlingson",
+      "url": "http://github.com/jrowlingson"
+    },
+    {
+      "name" : "Timothy Morey",
+      "url": "http://github.com/timmorey"
+    }
+  ],
   "license": "MIT",
   "devDependencies": {
     "broccoli-asset-rev": "^2.2.0",
