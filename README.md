@@ -2,6 +2,14 @@
 
 The ember-animated-status-label addon provides a component that will show different labels that correspond to the pending recently-settled promise states. This component also provides a subtle animated transition between each state. If the promise has settled the component will yield.
 
+At a high level, this component will produce the following markup for the aforementioned states:
+
+![alt text](https://raw.githubusercontent.com/jrowlingson/ember-animated-status-label/master/blob/label-states.png "Label States")
+
+## Demo
+
+![alt text](https://raw.githubusercontent.com/jrowlingson/ember-animated-status-label/master/blob/demo.gif "Animated Status Label Demo")
+
 ## Including in an application
 
 Here is the simplest way to get started with ember-animated-status-label:
