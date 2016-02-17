@@ -1,6 +1,6 @@
-# Ember-animated-status-label
+# Ember Animated Status Label
 
-This README outlines the details of collaborating on this Ember addon.
+The ember-animated-status-label addon provides a component that provides an animated transitions between the Promise states of settled, pending, and confirmation.
 
 ## Installation
 
