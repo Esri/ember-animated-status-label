@@ -1,6 +1,6 @@
 {
   "name": "ember-animated-status-label",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "The default blueprint for ember-cli addons.",
   "directories": {
     "doc": "doc",
@@ -21,7 +21,7 @@
       "url": "http://github.com/jrowlingson"
     },
     {
-      "name" : "Timothy Morey",
+      "name": "Timothy Morey",
       "url": "http://github.com/timmorey"
     }
   ],
