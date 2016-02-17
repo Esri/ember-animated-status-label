@@ -17,13 +17,14 @@ Here is the simplest way to get started with ember-animated-status-label:
 ```sh
 ember install ember-animated-status-label
 ember install ember-cli-sass
+ember install ember-cli-font-awesome
 ```
 
 *Note:* Ember CLI versions < 0.2.3 should use `ember install:addon` instead of `ember install`
 
 **app.sass**
 ```sass
-@import ember-animated-status-label/ember-animated-status-label
+@import animated-status-label
 ```
 
 **application.hbs**
