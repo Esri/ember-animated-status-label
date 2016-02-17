@@ -1,6 +1,6 @@
 {
   "name": "ember-animated-status-label",
-  "version": "0.0.2",
+  "version": "1.0.0",
   "description": "The default blueprint for ember-cli addons.",
   "directories": {
     "doc": "doc",
