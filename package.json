@@ -11,7 +11,7 @@
     "start": "ember server",
     "test": "ember try:testall"
   },
-  "repository": "http://github.com/jrowlingson/ember-animated-status-label",
+  "repository": "http://github.com/esri/ember-animated-status-label",
   "engines": {
     "node": ">= 0.10.0"
   },
