@@ -1,6 +1,6 @@
 # Ember Animated Status Label [![Build Status](https://travis-ci.org/Esri/ember-animated-status-label.svg?branch=master)](https://travis-ci.org/Esri/ember-animated-status-label) [![Ember Observer Score](http://emberobserver.com/badges/ember-animated-status-label.svg)](http://emberobserver.com/addons/ember-animated-status-label)
 
-The ember-animated-status-label addon provides a component that will show different labels that correspond to the pending recently-settled promise states. This component also provides a subtle animated transition between each state. If the promise has settled the component will yield.
+The ember-animated-status-label addon provides a component that will show different labels that correspond to the pending and recently-settled promise states. This component also provides a subtle animated transition between each state. If the promise has settled the component will yield.
 
 At a high level, this component will produce the following markup for the aforementioned states:
 
