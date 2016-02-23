@@ -34,7 +34,7 @@ export default Component.extend(Fadable, {
   isConfirming: computed.equal('status', StatusLabelState.CONFIRMING),
 
   init() {
-    this._super.apply(this, arguments);
+    this._super(...arguments);
     if (this.get('promise')) {
       this._animatePromise(this.get('promise'));
     }
