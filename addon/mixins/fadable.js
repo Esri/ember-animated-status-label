@@ -21,7 +21,9 @@ export default Mixin.create({
     if (!this.get('isDestroyed')) {
       this.setProperties({ shouldFadeIn: fadeIn, shouldFadeOut: !fadeIn });
       return this._delay(this.get('fadeAnimationDuration')).then(() => {
-        this.setProperties({ shouldFadeIn: false, shouldFadeOut: false });
+        if (!this.get('isDestroyed')) {
+          this.setProperties({ shouldFadeIn: false, shouldFadeOut: false });
+        }
       });
     }
   },
