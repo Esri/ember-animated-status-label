@@ -1,5 +1,5 @@
 import Ember from 'ember';
-const { Mixin, run, RSVP: { Promise } } = Ember;
+const { Mixin, run, RSVP: { Promise, reject } } = Ember;
 
 export default Mixin.create({
 
@@ -26,6 +26,7 @@ export default Mixin.create({
         }
       });
     }
+    return reject();
   },
 
   _delay(timePeriod) {
