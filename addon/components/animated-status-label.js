@@ -14,7 +14,7 @@ export default Component.extend(Fadable, {
 
   layout,
 
-  classNames: ['animated-status-label'],
+  classNames: [ 'animated-status-label' ],
 
   confirmationDuration: 1500,
 
@@ -29,8 +29,8 @@ export default Component.extend(Fadable, {
 
   status: StatusLabelState.SETTLED,
 
-  isSettled:    computed.equal('status', StatusLabelState.SETTLED),
-  isPending:    computed.equal('status', StatusLabelState.PENDING),
+  isSettled: computed.equal('status', StatusLabelState.SETTLED),
+  isPending: computed.equal('status', StatusLabelState.PENDING),
   isConfirming: computed.equal('status', StatusLabelState.CONFIRMING),
 
   init() {
