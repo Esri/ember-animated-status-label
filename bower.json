@@ -1,6 +1,4 @@
 {
   "name": "ember-animated-status-label",
-  "dependencies": {
-    "font-awesome": "~4.5.0"
-  }
+  "dependencies": {}
 }
