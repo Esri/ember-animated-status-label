@@ -3,7 +3,7 @@ import { moduleForComponent, test } from 'ember-qunit';
 import hbs from 'htmlbars-inline-precompile';
 import startApp from '../../helpers/start-app';
 
-const { RSVP: { Promise } } = Ember;
+const { RSVP, run } = Ember;
 
 moduleForComponent('animated-status-label', 'Integration | Component | animated status label', {
   integration: true,
@@ -49,7 +49,7 @@ test('when the promise is null, the component yields', function(assert) {
 test('pending text shown when promise is pending', function(assert) {
   assert.expect(1);
 
-  this.set('promise', new Promise(() => {}));
+  this.set('promise', new RSVP.Promise(() => {}));
 
   this.render(hbs`
    {{#animated-status-label
@@ -67,9 +67,7 @@ test('pending text shown when promise is pending', function(assert) {
 test('confirmation text shown when promise is resolved', function(assert) {
   assert.expect(1);
 
-  this.set('promise', new Promise(resolve => {
-    resolve();
-  }));
+  this.set('promise', RSVP.resolve());
 
   this.render(hbs`
    {{#animated-status-label
@@ -89,9 +87,7 @@ test('confirmation text shown when promise is resolved', function(assert) {
 test('label yields after confirmation is complete', function(assert) {
   assert.expect(1);
 
-  this.set('promise', new Promise(resolve => {
-    resolve();
-  }));
+  this.set('promise', RSVP.resolve());
 
   this.render(hbs`
    {{#animated-status-label
@@ -112,9 +108,7 @@ test('label yields after confirmation is complete', function(assert) {
 test('label yields when promise is rejected', function(assert) {
   assert.expect(1);
 
-  this.set('promise', new Promise((resolve, reject) => {
-    reject();
-  }));
+  this.set('promise', RSVP.reject());
 
   this.render(hbs`
    {{#animated-status-label
@@ -126,7 +120,9 @@ test('label yields when promise is rejected', function(assert) {
    {{/animated-status-label}}
   `);
 
-  andThen(() => {
+  let done = assert.async();
+  run.next(() => {
     assert.equal(this.$().text().trim(), 'yielded content');
+    done();
   });
 });

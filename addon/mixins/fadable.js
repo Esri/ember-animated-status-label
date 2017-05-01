@@ -3,7 +3,7 @@ const { Mixin, run, RSVP: { Promise } } = Ember;
 
 export default Mixin.create({
 
-  classNameBindings: ['shouldFadeIn:fade-in', 'shouldFadeOut:fade-out'],
+  classNameBindings: [ 'shouldFadeIn:fade-in', 'shouldFadeOut:fade-out' ],
   shouldFadeIn: false,
   shouldFadeOut: false,
 
