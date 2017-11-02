@@ -91,10 +91,3 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 A copy of the license is available in the repository's [LICENSE.md](LICENSE.md) file.
-
-## Credits
-
-Contributions from @timmorey and @jrowlingson.
-
-[](Esri Tags: Web HTML Ember Promise)
-[](Esri Language: JavaScript)
