@@ -22,7 +22,7 @@ module.exports = function(environment) {
       // Here you can pass flags/options to your application instance
       // when it is created
     },
-    
+
     sassOptions: {
       outputFile: 'dummy.css'
     }
@@ -48,7 +48,7 @@ module.exports = function(environment) {
   }
 
   if (environment === 'production') {
-    
+
   }
 
   return ENV;
