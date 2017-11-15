@@ -18,7 +18,6 @@ Here is the simplest way to get started with ember-animated-status-label:
 ```sh
 ember install ember-animated-status-label
 ember install ember-cli-sass
-ember install ember-cli-font-awesome
 ```
 
 *Note:* Ember CLI versions < 0.2.3 should use `ember install:addon` instead of `ember install`
@@ -53,6 +52,15 @@ Property               | Purpose
 `confirmationClassName`| CSS class name(s) to append to container span immediately after the promise enters a settled state.
 `confirmationAnimationFinished`| An action to be called after the confirmation animation has completed.
 `confirmationIconName` | FontAwesome icon name to use for the confirmation icon.
+
+## Ember Version Support
+
+Version 2.x of this addon does not support Ember version less than 2.10.  Please consult the following table to decide which version of this addon you should use based on the version of Ember you're using.
+
+| Ember Version | Addon Version |
+|---|---|
+| < 2.10 | 1.x |
+| >= 2.10 | 2.x |
 
 ## Running
 
