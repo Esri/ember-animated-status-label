@@ -1,5 +1,7 @@
-import Ember from 'ember'
-const { Mixin, run, RSVP: { Promise } } = Ember
+import Mixin from '@ember/object/mixin'
+import RSVP from 'rsvp'
+import { run } from '@ember/runloop'
+import { get, setProperties } from '@ember/object'
 
 export default Mixin.create({
 
@@ -18,16 +20,16 @@ export default Mixin.create({
   },
 
   _fade({ fadeIn }) {
-    if (!Ember.get(this, 'isDestroyed')) {
-      Ember.setProperties(this, { shouldFadeIn: fadeIn, shouldFadeOut: !fadeIn })
-      return this._delay(Ember.get(this, 'fadeAnimationDuration')).then(() => {
-        Ember.setProperties(this, { shouldFadeIn: false, shouldFadeOut: false })
+    if (!get(this, 'isDestroyed')) {
+      setProperties(this, { shouldFadeIn: fadeIn, shouldFadeOut: !fadeIn })
+      return this._delay(get(this, 'fadeAnimationDuration')).then(() => {
+        setProperties(this, { shouldFadeIn: false, shouldFadeOut: false })
       })
     }
   },
 
   _delay(timePeriod) {
-    return new Promise(resolve => {
+    return new RSVP.Promise(resolve => {
       // We only do a run.later if the timePeriod is > 0, which makes it easier
       // to test this component.  We can inject 0 delays when testing, which
       // makes code run synchronously.

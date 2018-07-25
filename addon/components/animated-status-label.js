@@ -1,8 +1,7 @@
-import Ember from 'ember'
+import Component from '@ember/component'
 import Fadable from '../mixins/fadable'
 import layout from '../templates/components/animated-status-label'
-
-const { Component, computed, observer } = Ember
+import { computed, get, observer, set } from '@ember/object'
 
 const StatusLabelState = {
   SETTLED: 0,
@@ -32,13 +31,13 @@ export default Component.extend(Fadable, {
   isConfirming: computed.equal('status', StatusLabelState.CONFIRMING),
 
   _promiseChanged: observer('promise', function() {
-    this._animatePromise(this.get('promise'))
+    this._animatePromise(get(this, 'promise'))
   }),
 
   init() {
     this._super(...arguments)
-    if (this.get('promise')) {
-      this._animatePromise(this.get('promise'))
+    if (get(this, 'promise')) {
+      this._animatePromise(get(this, 'promise'))
     }
   },
 
@@ -46,33 +45,33 @@ export default Component.extend(Fadable, {
     if (promise) {
       this._fadeInPendingText()
         .then(() => promise)
-        .then(() => this._fadeInConfirmationForTimePeriod(this.get('confirmationDuration')))
+        .then(() => this._fadeInConfirmationForTimePeriod(get(this, 'confirmationDuration')))
         .then(() => {
-          if (this.attrs.confirmationAnimationFinished) {
-            this.attrs.confirmationAnimationFinished()
+          if (get(this, 'confirmationAnimationFinished')) {
+            get(this, 'confirmationAnimationFinished')()
           }
         })
         .catch(() => {
           this.fadeOut().then(() => {
-            if (!this.get('isDestroyed')) {
-              this.set('status', StatusLabelState.SETTLED)
+            if (!get(this, 'isDestroyed')) {
+              set(this, 'status', StatusLabelState.SETTLED)
               this.fadeIn()
             }
           })
         })
     } else {
-      this.set('status', StatusLabelState.SETTLED)
+      set(this, 'status', StatusLabelState.SETTLED)
     }
   },
 
   _fadeInPendingText() {
-    this.set('status', StatusLabelState.PENDING)
+    set(this, 'status', StatusLabelState.PENDING)
     return this.fadeIn()
   },
 
   _fadeInConfirmationForTimePeriod(timePeriod) {
     return this.fadeOut()
-      .then(() => this.set('status', StatusLabelState.CONFIRMING))
+      .then(() => set(this, 'status', StatusLabelState.CONFIRMING))
       .then(() => this.fadeIn())
       .then(() => this._showConfirmationForTimePeriod(timePeriod))
   },
@@ -80,7 +79,7 @@ export default Component.extend(Fadable, {
   _showConfirmationForTimePeriod(timePeriod) {
     return this._delay(timePeriod)
       .then(() => this.fadeOut())
-      .then(() => this.set('status', StatusLabelState.SETTLED))
+      .then(() => set(this, 'status', StatusLabelState.SETTLED))
       .then(() => this.fadeIn())
   },
 
