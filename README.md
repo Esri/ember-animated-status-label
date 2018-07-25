@@ -54,40 +54,25 @@ Property               | Purpose
 `confirmationAnimationFinished`| An action to be called after the confirmation animation has completed.
 `confirmationIconName` | FontAwesome icon name to use for the confirmation icon.
 
-## Running
+### Linting
 
-* `ember server`
-* Visit your app at http://localhost:4200.
+* `npm run lint:js`
+* `npm run lint:js -- --fix`
 
-## Running Tests
+### Running tests
 
-* `npm test` (Runs `ember try:testall` to test your addon against multiple Ember versions)
-* `ember test`
-* `ember test --server`
+* `ember test` – Runs the test suite on the current Ember version
+* `ember test --server` – Runs the test suite in "watch mode"
+* `ember try:each` – Runs the test suite against multiple Ember versions
 
-## Building
+### Running the dummy application
 
-* `ember build`
+* `ember serve`
+* Visit the dummy application at [http://localhost:4200](http://localhost:4200).
 
-For more information on using ember-cli, visit [http://www.ember-cli.com/](http://www.ember-cli.com/).
+For more information on using ember-cli, visit [https://ember-cli.com/](https://ember-cli.com/).
 
-## Contributing
+License
+------------------------------------------------------------------------------
 
-Find an issue? Let us know! Contributions from anyone and everyone are welcome. Please see our [guidelines for contributing](https://github.com/esri/contributing).
-
-## Licensing
-Copyright 2015 [Esri](http://www.esri.com/)
-
-Licensed under The MIT License(MIT);
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-   http://opensource.org/licenses/MIT
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-
-A copy of the license is available in the repository's [LICENSE.md](LICENSE.md) file.
+This project is licensed under the [MIT License](LICENSE.md).
