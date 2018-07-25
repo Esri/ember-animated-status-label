@@ -1,5 +1,5 @@
-import Ember from 'ember';
-const { Mixin, run, RSVP: { Promise } } = Ember;
+import Ember from 'ember'
+const { Mixin, run, RSVP: { Promise } } = Ember
 
 export default Mixin.create({
 
@@ -10,19 +10,19 @@ export default Mixin.create({
   fadeAnimationDuration: 200,
 
   fadeOut() {
-    return this._fade({ fadeIn: false });
+    return this._fade({ fadeIn: false })
   },
 
   fadeIn() {
-    return this._fade({ fadeIn: true });
+    return this._fade({ fadeIn: true })
   },
 
   _fade({ fadeIn }) {
-    if (!this.get('isDestroyed')) {
-      this.setProperties({ shouldFadeIn: fadeIn, shouldFadeOut: !fadeIn });
-      return this._delay(this.get('fadeAnimationDuration')).then(() => {
-        this.setProperties({ shouldFadeIn: false, shouldFadeOut: false });
-      });
+    if (!Ember.get(this, 'isDestroyed')) {
+      Ember.setProperties(this, { shouldFadeIn: fadeIn, shouldFadeOut: !fadeIn })
+      return this._delay(Ember.get(this, 'fadeAnimationDuration')).then(() => {
+        Ember.setProperties(this, { shouldFadeIn: false, shouldFadeOut: false })
+      })
     }
   },
 
@@ -33,11 +33,11 @@ export default Mixin.create({
       // makes code run synchronously.
       //
       if (timePeriod > 0) {
-        run.later(resolve, timePeriod);
+        run.later(resolve, timePeriod)
       } else {
-        resolve();
+        resolve()
       }
-    });
+    })
   }
 
-});
+})
