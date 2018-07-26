@@ -17,11 +17,16 @@ export default Component.extend({
 
   promise: undefined,
 
-  labelState: SETTLED,
+  labelState: undefined,
 
   _activePromise: undefined,
   _isFadingIn: false,
   _isFadingOut: false,
+
+  init() {
+    this._super(...arguments)
+    set(this, 'labelState', get(this, 'promise') ? PENDING : SETTLED)
+  },
 
   didReceiveAttrs() {
     this._super(...arguments)

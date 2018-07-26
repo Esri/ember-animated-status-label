@@ -38,9 +38,7 @@ module('Integration | Component | animated-status-label', function(hooks) {
 
   test('it handles resolving promises', async function(assert) {
     await this.renderComponent({ promise: new RSVP.resolve() })
-    assert.equal(this.element.textContent.trim(), this.settledContent, 'initially shows settled content')
-    await waitUntil(() => this.element.textContent.trim() !== this.settledContent)
-    assert.equal(this.element.textContent.trim(), this.pendingContent, 'transitions to pending content')
+    assert.equal(this.element.textContent.trim(), this.pendingContent, 'initially shows pending content')
     await waitUntil(() => this.element.textContent.trim() !== this.pendingContent)
     assert.equal(this.element.textContent.trim(), this.confirmationContent, 'transitions to confirmation content')
     await waitUntil(() => this.element.textContent.trim() !== this.confirmationContent)
@@ -49,9 +47,7 @@ module('Integration | Component | animated-status-label', function(hooks) {
 
   test('it handles rejecting promises', async function(assert) {
     await this.renderComponent({ promise: new RSVP.reject() })
-    assert.equal(this.element.textContent.trim(), this.settledContent, 'initially shows settled content')
-    await waitUntil(() => this.element.textContent.trim() !== this.settledContent)
-    assert.equal(this.element.textContent.trim(), this.pendingContent, 'transitions to pending content')
+    assert.equal(this.element.textContent.trim(), this.pendingContent, 'initially shows pending content')
     await waitUntil(() => this.element.textContent.trim() !== this.pendingContent)
     assert.equal(this.element.textContent.trim(), this.settledContent, 'transitions to settled content')
   })
