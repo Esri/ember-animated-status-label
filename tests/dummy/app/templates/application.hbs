@@ -1,2 +1,11 @@
-<h2 id="title">Welcome to Ember</h2>
-{{outlet}}
+<button {{action 'testSuccess'}}>Test Success</button>
+<button {{action 'testError'}}>Text Error</button>
+{{#animated-status-label taskInstance=testTaskInstance as |labelState|}}
+  {{#if (eq labelState 'settled')}}
+    settled
+  {{else if (eq labelState 'confirming')}}
+    confirming
+  {{else if (eq labelState 'pending')}}
+    pending...
+  {{/if}}
+{{/animated-status-label}}
