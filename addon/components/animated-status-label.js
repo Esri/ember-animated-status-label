@@ -26,7 +26,7 @@ export default Component.extend({
   didReceiveAttrs() {
     this._super(...arguments)
     if (get(this, 'promise') !== get(this, '_activePromise')) {
-      this._animateTask.perform(get(this, 'promise'))
+      get(this, '_animateTask').perform(get(this, 'promise'))
     }
   },
 
@@ -44,27 +44,27 @@ export default Component.extend({
   _animateTask: task(function* (promise) {
     set(this, '_activePromise', promise)
     if (!promise) {
-      return yield this._transitionToStateTask.perform(SETTLED)
+      return yield get(this, '_transitionToStateTask').perform(SETTLED)
     }
-    yield this._transitionToStateTask.perform(PENDING)
+    yield get(this, '_transitionToStateTask').perform(PENDING)
     try {
       yield promise
     } catch (error) {
-      yield this._transitionToStateTask.perform(SETTLED)
+      yield get(this, '_transitionToStateTask').perform(SETTLED)
       throw error
     }
-    yield this._transitionToStateTask.perform(CONFIRMING)
+    yield get(this, '_transitionToStateTask').perform(CONFIRMING)
     yield timeout(get(this, 'confirmationDuration'))
-    yield this._transitionToStateTask.perform(SETTLED)
+    yield get(this, '_transitionToStateTask').perform(SETTLED)
   }).restartable(),
 
   _transitionToStateTask: task(function* (state) {
     if (get(this, 'labelState') === state) {
       return
     }
-    yield this._fadeOutTask.perform()
+    yield get(this, '_fadeOutTask').perform()
     set(this, 'labelState', state)
-    yield this._fadeInTask.perform()
+    yield get(this, '_fadeInTask').perform()
   }).enqueue(),
 
   _fadeOutTask: task(function* () {
