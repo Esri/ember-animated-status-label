@@ -15,18 +15,19 @@ export default Component.extend({
 
   confirmationDuration: 1500,
 
-  taskInstance: undefined,
+  promise: undefined,
 
   labelState: SETTLED,
 
-  _activeTaskInstance: undefined,
+  _activePromise: undefined,
   _isFadingIn: false,
   _isFadingOut: false,
 
   didReceiveAttrs() {
     this._super(...arguments)
-    if (get(this, 'taskInstance') !== get(this, '_activeTaskInstance')) {
-      this._animateTask.perform(get(this, 'taskInstance'))
+    if (get(this, 'promise') !== get(this, '_activePromise')) {
+      this._animateTask.cancelAll()
+      this._animateTask.perform(get(this, 'promise'))
     }
   },
 
@@ -41,21 +42,21 @@ export default Component.extend({
     })
   },
 
-  _animateTask: task(function* (taskInstance) {
-    set(this, '_activeTaskInstance', taskInstance)
-    if (!taskInstance) {
+  _animateTask: task(function* (promise) {
+    set(this, '_activePromise', promise)
+    if (!promise) {
       return yield this._transitionToStateTask.perform(SETTLED)
     }
-    if (!get(taskInstance, 'isFinished')) {
-      yield this._transitionToStateTask.perform(PENDING)
-      yield waitForProperty(taskInstance, 'isFinished', true)
+    yield this._transitionToStateTask.perform(PENDING)
+    try {
+      yield promise
+    } catch (error) {
+      yield this._transitionToStateTask.perform(SETTLED)
+      throw error
     }
-    if (get(taskInstance, 'isSuccessful')) {
-      yield this._transitionToStateTask.perform(CONFIRMING)
-      yield timeout(get(this, 'confirmationDuration'))
-    }
+    yield this._transitionToStateTask.perform(CONFIRMING)
+    yield timeout(get(this, 'confirmationDuration'))
     yield this._transitionToStateTask.perform(SETTLED)
-    set(this, '_activeTaskInstance', undefined)
   }).restartable(),
 
   _transitionToStateTask: task(function* (state) {

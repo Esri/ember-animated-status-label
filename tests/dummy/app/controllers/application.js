@@ -1,37 +1,23 @@
 import Controller from '@ember/controller'
-import { get, set, setProperties } from '@ember/object'
-import { task, waitForProperty } from 'ember-concurrency'
+import RSVP from 'rsvp'
+import { get, set } from '@ember/object'
 
 export default Controller.extend({
 
-  testTaskInstance: undefined,
+  deferred: undefined,
 
   actions: {
     startTask() {
-      set(this, 'isSettled', false)
-      set(this, 'testTaskInstance', get(this, '_testTask').perform())
+      set(this, 'deferred', RSVP.defer())
     },
 
     resolve() {
-      setProperties(this, {
-        isSettled: true,
-        shouldError: false
-      })
+      get(this, 'deferred').resolve()
     },
 
     reject() {
-      setProperties(this, {
-        isSettled: true,
-        shouldError: true
-      })
+      get(this, 'deferred').reject()
     }
-  },
-
-  _testTask: task(function* () {
-    yield waitForProperty(this, 'isSettled', true)
-    if (get(this, 'shouldError')) {
-      throw 'error!'
-    }
-  }).restartable(),
+  }
 
 })
