@@ -1,7 +1,1 @@
-{{#if isPending}}
-  {{yield 'pending'}}
-{{else if isConfirming}}
-  {{yield 'confirming'}}
-{{else}}
-  {{yield 'settled'}}
-{{/if}}
+{{yield labelState}}

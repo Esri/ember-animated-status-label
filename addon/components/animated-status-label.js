@@ -1,30 +1,27 @@
 import Component from '@ember/component'
 import layout from '../templates/components/animated-status-label'
-import { computed, get, set, setProperties } from '@ember/object'
-import { task, timeout } from 'ember-concurrency'
+import { get, set } from '@ember/object'
+import { task, timeout, waitForProperty } from 'ember-concurrency'
 
-const StatusLabelState = {
-  SETTLED: 0,
-  PENDING: 1,
-  CONFIRMING: 2
-}
+export const SETTLED = 'settled'
+export const PENDING = 'pending'
+export const CONFIRMING = 'confirming'
 
 export default Component.extend({
   layout,
 
   classNames: [ 'animated-status-label' ],
-  classNameBindings: [ 'isFadingIn:fade-in', 'isFadingOut:fade-out' ],
+  classNameBindings: [ '_isFadingIn:fade-in', '_isFadingOut:fade-out' ],
 
-  fadeAnimationDuration: 200,
   confirmationDuration: 1500,
 
   taskInstance: undefined,
 
-  _activeTaskInstance: undefined,
+  labelState: SETTLED,
 
-  isSettled: computed.equal('_labelState', StatusLabelState.SETTLED),
-  isPending: computed.equal('_labelState', StatusLabelState.PENDING),
-  isConfirming: computed.equal('_labelState', StatusLabelState.CONFIRMING),
+  _activeTaskInstance: undefined,
+  _isFadingIn: false,
+  _isFadingOut: false,
 
   didReceiveAttrs() {
     this._super(...arguments)
@@ -33,41 +30,51 @@ export default Component.extend({
     }
   },
 
+  didInsertElement() {
+    this._super(...arguments)
+    this.element.addEventListener('animationend', event => {
+      if (event.animationName === 'animated-status-label-fade-in') {
+        set(this, '_isFadingIn', false)
+      } else if (event.animationName === 'animated-status-label-fade-out') {
+        set(this, '_isFadingOut', false)
+      }
+    })
+  },
+
   _animateTask: task(function* (taskInstance) {
     set(this, '_activeTaskInstance', taskInstance)
     if (!taskInstance) {
-      yield this._fadeToStateTask.perform(StatusLabelState.SETTLED)
-      return
+      return yield this._transitionToStateTask.perform(SETTLED)
     }
-    if ((get(taskInstance, 'state') === 'waiting' || get(taskInstance, 'state') === 'running')) {
-      yield this._fadeToStateTask.perform(StatusLabelState.PENDING)
+    if (!get(taskInstance, 'isFinished')) {
+      yield this._transitionToStateTask.perform(PENDING)
+      yield waitForProperty(taskInstance, 'isFinished', true)
     }
-    try {
-      yield taskInstance
-      yield this._fadeToStateTask.perform(StatusLabelState.CONFIRMING)
+    if (get(taskInstance, 'isSuccessful')) {
+      yield this._transitionToStateTask.perform(CONFIRMING)
       yield timeout(get(this, 'confirmationDuration'))
-    } finally {
-      yield this._fadeToStateTask.perform(StatusLabelState.SETTLED)
-      set(this, '_activeTaskInstance', undefined)
     }
+    yield this._transitionToStateTask.perform(SETTLED)
+    set(this, '_activeTaskInstance', undefined)
   }).restartable(),
 
-  _fadeToStateTask: task(function* (state) {
-    if (get(this, '_labelState') === state) {
+  _transitionToStateTask: task(function* (state) {
+    if (get(this, 'labelState') === state) {
       return
     }
-    setProperties(this, {
-      isFadingIn: false,
-      isFadingOut: true
-    })
-    yield timeout(this.fadeAnimationDuration)
-    setProperties(this, {
-      _labelState: state,
-      isFadingIn: true,
-      isFadingOut: false
-    })
+    yield this._fadeOutTask.perform()
+    set(this, 'labelState', state)
+    yield this._fadeInTask.perform()
+  }).enqueue(),
+
+  _fadeOutTask: task(function* () {
+    set(this, '_isFadingOut', true)
+    yield waitForProperty(this, '_isFadingOut', false)
   }),
 
-  _labelState: StatusLabelState.SETTLED,
+  _fadeInTask: task(function* () {
+    set(this, '_isFadingIn', true)
+    yield waitForProperty(this, '_isFadingIn', false)
+  })
 
 })

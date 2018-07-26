@@ -2,12 +2,12 @@
   transition: opacity 0.4s ease-out 0s
 
   &.fade-out
-    animation: status-exit .2s ease 0s both
+    animation: animated-status-label-fade-out .2s ease 0s both
 
   &.fade-in
-    animation: status-enter .2s ease 0s both
+    animation: animated-status-label-fade-in .2s ease 0s both
 
-@keyframes status-enter
+@keyframes animated-status-label-fade-in
   0%
     opacity: 0
     transform: scale(0.8)
@@ -15,7 +15,7 @@
     opacity: 1
     transform: scale(1)
 
-@keyframes status-exit
+@keyframes animated-status-label-fade-out
   0%
     opacity: 1
     transform: scale(1)

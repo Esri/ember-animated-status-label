@@ -1,5 +1,8 @@
-<button {{action 'testSuccess'}}>Test Success</button>
-<button {{action 'testError'}}>Text Error</button>
+<div>
+  <button {{action 'startTask'}}>Start Task</button>
+  <button {{action 'resolve'}}>Resolve</button>
+  <button {{action 'reject'}}>Reject</button>
+</div>
 {{#animated-status-label taskInstance=testTaskInstance as |labelState|}}
   {{#if (eq labelState 'settled')}}
     settled
