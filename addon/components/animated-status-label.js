@@ -26,7 +26,6 @@ export default Component.extend({
   didReceiveAttrs() {
     this._super(...arguments)
     if (get(this, 'promise') !== get(this, '_activePromise')) {
-      this._animateTask.cancelAll()
       this._animateTask.perform(get(this, 'promise'))
     }
   },
