@@ -14,30 +14,30 @@ export default Mixin.create({
 
   _observeAnimationEnd: on('didInsertElement', function() {
     this.element.addEventListener('animationend', event => {
-      if (event.animationName === get(this, 'fadeInAnimationName')) {
+      if (get(this, '_isFadingIn') && event.animationName === get(this, 'fadeInAnimationName')) {
         set(this, '_isFadingIn', false)
-      } else if (event.animationName === get(this, 'fadeOutAnimationName')) {
+      } else if (get(this, '_isFadingOut') && event.animationName === get(this, 'fadeOutAnimationName')) {
         set(this, '_isFadingOut', false)
       }
     })
   }),
 
-  fadeOut() {
-    return get(this, '_fadeOutTask').perform()
-  },
-
   fadeIn() {
     return get(this, '_fadeInTask').perform()
   },
 
-  _fadeOutTask: task(function* () {
-    set(this, '_isFadingOut', true)
-    yield waitForProperty(this, '_isFadingOut', false)
-  }),
+  fadeOut() {
+    return get(this, '_fadeOutTask').perform()
+  },
 
   _fadeInTask: task(function* () {
     set(this, '_isFadingIn', true)
     yield waitForProperty(this, '_isFadingIn', false)
+  }),
+
+  _fadeOutTask: task(function* () {
+    set(this, '_isFadingOut', true)
+    yield waitForProperty(this, '_isFadingOut', false)
   })
 
 })
