@@ -46,7 +46,6 @@ export default Component.extend(Fadable, {
       yield promise
       yield get(this, '_transitionToStateTask').perform(CONFIRMING)
       yield timeout(get(this, 'confirmationDuration'))
-      this.onConfirmationFinished()
       yield get(this, '_transitionToStateTask').perform(SETTLED)
     } catch (error) {
       yield get(this, '_transitionToStateTask').perform(SETTLED)
@@ -58,6 +57,9 @@ export default Component.extend(Fadable, {
       return
     }
     yield this.fadeOut()
+    if (get(this, 'labelState') === CONFIRMING && state === SETTLED) {
+      this.onConfirmationFinished()
+    }
     set(this, 'labelState', state)
     yield this.fadeIn()
   }).enqueue()
