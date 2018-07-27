@@ -13,12 +13,17 @@ module('Integration | Component | animated-status-label', function(hooks) {
       pendingContent: 'PENDING',
       confirmationContent: 'CONFIRMATION',
       settledContent: 'SETTLED',
-      confirmationDuration: 0
+      confirmationDuration: 0,
+      onConfirmationFinished: () => {}
     })
     this.renderComponent = async props => {
       setProperties(this, props)
       await render(hbs`
-        {{#animated-status-label promise=promise confirmationDuration=confirmationDuration as |labelState|}}
+        {{#animated-status-label
+            promise=promise
+            confirmationDuration=confirmationDuration
+            onConfirmationFinished=(action onConfirmationFinished)
+            as |labelState|}}
           {{#if (eq labelState 'settled')}}
             {{settledContent}}
           {{else if (eq labelState 'pending')}}
@@ -50,5 +55,19 @@ module('Integration | Component | animated-status-label', function(hooks) {
     assert.equal(this.element.textContent.trim(), this.pendingContent, 'initially shows pending content')
     await waitUntil(() => this.element.textContent.trim() !== this.pendingContent)
     assert.equal(this.element.textContent.trim(), this.settledContent, 'transitions to settled content')
+  })
+
+  test('it fires onConfirmationFinished after showing the confirmation', async function(assert) {
+    assert.expect(1)
+    let hasShownConfirmation = false
+    let hasShownSettled = false
+    await this.renderComponent({
+      promise: new RSVP.resolve(),
+      onConfirmationFinished: () => assert.ok(hasShownConfirmation && !hasShownSettled)
+    })
+    await waitUntil(() => this.element.textContent.trim() !== this.pendingContent)
+    hasShownConfirmation = this.element.textContent.trim() === this.confirmationContent
+    await waitUntil(() => this.element.textContent.trim() !== this.confirmationContent)
+    hasShownSettled = this.element.textContent.trim() === this.settledContent
   })
 })

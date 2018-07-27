@@ -23,6 +23,8 @@ export default Component.extend({
   _isFadingIn: false,
   _isFadingOut: false,
 
+  onConfirmationFinished() {},
+
   init() {
     this._super(...arguments)
     set(this, 'labelState', get(this, 'promise') ? PENDING : SETTLED)
@@ -54,13 +56,13 @@ export default Component.extend({
     yield get(this, '_transitionToStateTask').perform(PENDING)
     try {
       yield promise
+      yield get(this, '_transitionToStateTask').perform(CONFIRMING)
+      yield timeout(get(this, 'confirmationDuration'))
+      this.onConfirmationFinished()
+      yield get(this, '_transitionToStateTask').perform(SETTLED)
     } catch (error) {
       yield get(this, '_transitionToStateTask').perform(SETTLED)
-      throw error
     }
-    yield get(this, '_transitionToStateTask').perform(CONFIRMING)
-    yield timeout(get(this, 'confirmationDuration'))
-    yield get(this, '_transitionToStateTask').perform(SETTLED)
   }).restartable(),
 
   _transitionToStateTask: task(function* (state) {
