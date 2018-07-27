@@ -1,27 +1,26 @@
 import Component from '@ember/component'
+import Fadable from '../mixins/fadable'
 import layout from '../templates/components/animated-status-label'
 import { get, set } from '@ember/object'
-import { task, timeout, waitForProperty } from 'ember-concurrency'
+import { task, timeout } from 'ember-concurrency'
 
 export const SETTLED = 'settled'
 export const PENDING = 'pending'
 export const CONFIRMING = 'confirming'
 
-export default Component.extend({
+export default Component.extend(Fadable, {
   layout,
 
   classNames: [ 'animated-status-label' ],
-  classNameBindings: [ '_isFadingIn:fade-in', '_isFadingOut:fade-out' ],
 
   confirmationDuration: 1500,
-
   promise: undefined,
 
   labelState: undefined,
+  fadeOutAnimationName: 'animated-status-label-fade-out',
+  fadeInAnimationName: 'animated-status-label-fade-in',
 
   _activePromise: undefined,
-  _isFadingIn: false,
-  _isFadingOut: false,
 
   onConfirmationFinished() {},
 
@@ -35,17 +34,6 @@ export default Component.extend({
     if (get(this, 'promise') !== get(this, '_activePromise')) {
       get(this, '_animateTask').perform(get(this, 'promise'))
     }
-  },
-
-  didInsertElement() {
-    this._super(...arguments)
-    this.element.addEventListener('animationend', event => {
-      if (event.animationName === 'animated-status-label-fade-in') {
-        set(this, '_isFadingIn', false)
-      } else if (event.animationName === 'animated-status-label-fade-out') {
-        set(this, '_isFadingOut', false)
-      }
-    })
   },
 
   _animateTask: task(function* (promise) {
@@ -69,19 +57,9 @@ export default Component.extend({
     if (get(this, 'labelState') === state) {
       return
     }
-    yield get(this, '_fadeOutTask').perform()
+    yield this.fadeOut()
     set(this, 'labelState', state)
-    yield get(this, '_fadeInTask').perform()
-  }).enqueue(),
-
-  _fadeOutTask: task(function* () {
-    set(this, '_isFadingOut', true)
-    yield waitForProperty(this, '_isFadingOut', false)
-  }),
-
-  _fadeInTask: task(function* () {
-    set(this, '_isFadingIn', true)
-    yield waitForProperty(this, '_isFadingIn', false)
-  })
+    yield this.fadeIn()
+  }).enqueue()
 
 })
