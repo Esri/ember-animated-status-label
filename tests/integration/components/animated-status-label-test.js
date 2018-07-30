@@ -23,12 +23,12 @@ module('Integration | Component | animated-status-label', function(hooks) {
             promise=promise
             confirmationDuration=confirmationDuration
             onConfirmationFinished=(action onConfirmationFinished)
-            as |labelState|}}
-          {{#if (eq labelState 'settled')}}
+            as |label|}}
+          {{#if label.isSettled}}
             {{settledContent}}
-          {{else if (eq labelState 'pending')}}
+          {{else if label.isPending}}
             {{pendingContent}}
-          {{else if (eq labelState 'confirming')}}
+          {{else if label.isConfirming}}
             {{confirmationContent}}
           {{/if}}
         {{/animated-status-label}}
