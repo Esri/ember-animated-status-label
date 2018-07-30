@@ -1,1 +1,4 @@
-{{yield labelState}}
+{{yield (hash
+    isSettled=isSettled
+    isPending=isPending
+    isConfirming=isConfirming)}}

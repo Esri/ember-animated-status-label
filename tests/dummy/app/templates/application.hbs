@@ -3,12 +3,12 @@
   <button {{action 'resolve'}}>Resolve</button>
   <button {{action 'reject'}}>Reject</button>
 </div>
-{{#animated-status-label promise=deferred.promise as |labelState|}}
-  {{#if (eq labelState 'settled')}}
+{{#animated-status-label promise=deferred.promise as |label|}}
+  {{#if label.isSettled}}
     settled
-  {{else if (eq labelState 'confirming')}}
+  {{else if label.isConfirming}}
     confirming
-  {{else if (eq labelState 'pending')}}
+  {{else if label.isPending}}
     pending...
   {{/if}}
 {{/animated-status-label}}
