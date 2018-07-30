@@ -15,11 +15,11 @@
   "contributors": [
     {
       "name": "Jack Rowlingson",
-      "url": "http://github.com/jrowlingson"
+      "url": "https://github.com/jrowlingson"
     },
     {
       "name": "Timothy Morey",
-      "url": "http://github.com/timmorey"
+      "url": "https://github.com/timmorey"
     }
   ],
   "dependencies": {
@@ -61,7 +61,7 @@
     "ember-animated-status-label",
     "ember-addon"
   ],
-  "repository": "http://github.com/esri/ember-animated-status-label",
+  "repository": "https://github.com/esri/ember-animated-status-label",
   "license": "MIT",
   "directories": {
     "doc": "doc",

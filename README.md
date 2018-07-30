@@ -1,5 +1,5 @@
-# Ember Animated Status Label 
-[![Build Status](https://travis-ci.org/Esri/ember-animated-status-label.svg?branch=master)](https://travis-ci.org/Esri/ember-animated-status-label) [![Ember Observer Score](http://emberobserver.com/badges/ember-animated-status-label.svg)](http://emberobserver.com/addons/ember-animated-status-label) [![Dependency Status](https://david-dm.org/esri/ember-animated-status-label.svg)](https://david-dm.org/esri/ember-animated-status-label) [![Code Climate](https://codeclimate.com/github/Esri/ember-animated-status-label/badges/gpa.svg)](https://codeclimate.com/github/Esri/ember-animated-status-label)
+# Ember Animated Status Label
+[![Build Status](https://travis-ci.org/Esri/ember-animated-status-label.svg?branch=master)](https://travis-ci.org/Esri/ember-animated-status-label) [![Ember Observer Score](https://emberobserver.com/badges/ember-animated-status-label.svg)](https://emberobserver.com/addons/ember-animated-status-label) [![Dependency Status](https://david-dm.org/esri/ember-animated-status-label.svg)](https://david-dm.org/esri/ember-animated-status-label) [![Code Climate](https://codeclimate.com/github/Esri/ember-animated-status-label/badges/gpa.svg)](https://codeclimate.com/github/Esri/ember-animated-status-label)
 
 The ember-animated-status-label addon provides a component that will show different labels that correspond to the pending and recently-settled promise states. This component also provides a subtle animated transition between each state. If the promise has settled the component will yield.
 
