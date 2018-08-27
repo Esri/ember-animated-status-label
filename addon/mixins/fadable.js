@@ -1,43 +1,43 @@
-import Ember from 'ember';
-const { Mixin, run, RSVP: { Promise } } = Ember;
+import Mixin from '@ember/object/mixin'
+import { get, set } from '@ember/object'
+import { on } from '@ember/object/evented'
+import { task, waitForProperty } from 'ember-concurrency'
 
 export default Mixin.create({
 
-  classNameBindings: [ 'shouldFadeIn:fade-in', 'shouldFadeOut:fade-out' ],
-  shouldFadeIn: false,
-  shouldFadeOut: false,
+  classNameBindings: [ '_isFadingIn:fade-in', '_isFadingOut:fade-out' ],
+  _isFadingIn: false,
+  _isFadingOut: false,
 
-  fadeAnimationDuration: 200,
+  fadeInAnimationName: undefined,
+  fadeOutAnimationName: undefined,
 
-  fadeOut() {
-    return this._fade({ fadeIn: false });
-  },
+  _observeAnimationEnd: on('didInsertElement', function() {
+    this.element.addEventListener('animationend', event => {
+      if (get(this, '_isFadingIn') && event.animationName === get(this, 'fadeInAnimationName')) {
+        set(this, '_isFadingIn', false)
+      } else if (get(this, '_isFadingOut') && event.animationName === get(this, 'fadeOutAnimationName')) {
+        set(this, '_isFadingOut', false)
+      }
+    })
+  }),
 
   fadeIn() {
-    return this._fade({ fadeIn: true });
+    return get(this, '_fadeInTask').perform()
   },
 
-  _fade({ fadeIn }) {
-    if (!this.get('isDestroyed')) {
-      this.setProperties({ shouldFadeIn: fadeIn, shouldFadeOut: !fadeIn });
-      return this._delay(this.get('fadeAnimationDuration')).then(() => {
-        this.setProperties({ shouldFadeIn: false, shouldFadeOut: false });
-      });
-    }
+  fadeOut() {
+    return get(this, '_fadeOutTask').perform()
   },
 
-  _delay(timePeriod) {
-    return new Promise(resolve => {
-      // We only do a run.later if the timePeriod is > 0, which makes it easier
-      // to test this component.  We can inject 0 delays when testing, which
-      // makes code run synchronously.
-      //
-      if (timePeriod > 0) {
-        run.later(resolve, timePeriod);
-      } else {
-        resolve();
-      }
-    });
-  }
+  _fadeInTask: task(function* () {
+    set(this, '_isFadingIn', true)
+    yield waitForProperty(this, '_isFadingIn', false)
+  }),
 
-});
+  _fadeOutTask: task(function* () {
+    set(this, '_isFadingOut', true)
+    yield waitForProperty(this, '_isFadingOut', false)
+  })
+
+})

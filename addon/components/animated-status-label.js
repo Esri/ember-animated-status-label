@@ -1,89 +1,73 @@
-import Ember from 'ember';
-import Fadable from '../mixins/fadable';
-import layout from '../templates/components/animated-status-label';
-
-const { Component, computed, observer } = Ember;
+import Component from '@ember/component'
+import Fadable from '../mixins/fadable'
+import layout from '../templates/components/animated-status-label'
+import { computed, get, set } from '@ember/object'
+import { task, timeout } from 'ember-concurrency'
 
 const StatusLabelState = {
   SETTLED: 0,
   PENDING: 1,
   CONFIRMING: 2
-};
+}
 
 export default Component.extend(Fadable, {
-
   layout,
 
   classNames: [ 'animated-status-label' ],
 
   confirmationDuration: 1500,
+  promise: undefined,
 
-  promise: null,
+  status: undefined,
+  fadeOutAnimationName: 'animated-status-label-fade-out',
+  fadeInAnimationName: 'animated-status-label-fade-in',
 
-  pendingText: '',
-  pendingClassName: '',
+  _activePromise: undefined,
 
-  confirmationText: '',
-  confirmationClassName: '',
-  confirmationIconName: 'check-circle',
-
-  status: StatusLabelState.SETTLED,
+  onConfirmationFinished() {},
 
   isSettled: computed.equal('status', StatusLabelState.SETTLED),
   isPending: computed.equal('status', StatusLabelState.PENDING),
   isConfirming: computed.equal('status', StatusLabelState.CONFIRMING),
 
   init() {
-    this._super(...arguments);
-    if (this.get('promise')) {
-      this._animatePromise(this.get('promise'));
+    this._super(...arguments)
+    set(this, 'status', get(this, 'promise') ? StatusLabelState.PENDING : StatusLabelState.SETTLED)
+  },
+
+  didReceiveAttrs() {
+    this._super(...arguments)
+    if (get(this, 'promise') !== get(this, '_activePromise')) {
+      get(this, '_animateTask').perform(get(this, 'promise'))
     }
   },
 
-  _promiseChanged: observer('promise', function() {
-    this._animatePromise(this.get('promise'));
-  }),
-
-  _animatePromise(promise) {
-    if (promise) {
-      this._fadeInPendingText()
-        .then(() => promise)
-        .then(() => this._fadeInConfirmationForTimePeriod(this.get('confirmationDuration')))
-        .then(() => {
-          if (this.attrs.confirmationAnimationFinished) {
-            this.attrs.confirmationAnimationFinished();
-          }
-        })
-        .catch(() => {
-          this.fadeOut().then(() => {
-            if (!this.get('isDestroyed')) {
-              this.set('status', StatusLabelState.SETTLED);
-              this.fadeIn();
-            }
-          });
-        });
-    } else {
-      this.set('status', StatusLabelState.SETTLED);
+  _animateTask: task(function* (promise) {
+    set(this, '_activePromise', promise)
+    if (!promise) {
+      return yield get(this, '_transitionToStateTask').perform(StatusLabelState.SETTLED)
     }
-  },
+    yield get(this, '_transitionToStateTask').perform(StatusLabelState.PENDING)
+    try {
+      yield promise
+      yield get(this, '_transitionToStateTask').perform(StatusLabelState.CONFIRMING)
+      yield timeout(get(this, 'confirmationDuration'))
+      yield get(this, '_transitionToStateTask').perform(StatusLabelState.SETTLED)
+    } catch (error) {
+      yield get(this, '_transitionToStateTask').perform(StatusLabelState.SETTLED)
+    }
+  }).restartable(),
 
-  _fadeInPendingText() {
-    this.set('status', StatusLabelState.PENDING);
-    return this.fadeIn();
-  },
+  _transitionToStateTask: task(function* (state) {
+    if (get(this, 'status') === state) {
+      return
+    }
+    yield this.fadeOut()
+    if (get(this, 'status') === StatusLabelState.CONFIRMING && state === StatusLabelState.SETTLED) {
+      this.onConfirmationFinished()
+    }
+    set(this, 'status', state)
+    yield this.fadeIn()
+  }).enqueue()
 
-  _fadeInConfirmationForTimePeriod(timePeriod) {
-    return this.fadeOut()
-      .then(() => this.set('status', StatusLabelState.CONFIRMING))
-      .then(() => this.fadeIn())
-      .then(() => this._showConfirmationForTimePeriod(timePeriod));
-  },
-
-  _showConfirmationForTimePeriod(timePeriod) {
-    return this._delay(timePeriod)
-      .then(() => this.fadeOut())
-      .then(() => this.set('status', StatusLabelState.SETTLED))
-      .then(() => this.fadeIn());
-  }
-
-});
+})

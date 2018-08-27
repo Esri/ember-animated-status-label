@@ -1,14 +1,16 @@
-import Ember from 'ember';
-import FadableMixin from '../../../mixins/fadable';
-import { module, test } from 'qunit';
+import Component from '@ember/component'
+import FadableMixin from 'ember-animated-status-label/mixins/fadable'
+import hbs from 'htmlbars-inline-precompile'
+import { module, test } from 'qunit'
+import { render } from '@ember/test-helpers'
+import { setupRenderingTest } from 'ember-qunit'
 
-const { Object: EmberObject } = Ember;
+module('Unit | Mixin | fadable', function(hooks) {
+  setupRenderingTest(hooks)
 
-module('Unit | Mixin | fadable');
-
-// Replace this with your real tests.
-test('it works', function(assert) {
-  let FadableObject = EmberObject.extend(FadableMixin);
-  let subject = FadableObject.create();
-  assert.ok(subject);
-});
+  test('it works', async function (assert) {
+    this.owner.register('component:fadable-component', Component.extend(FadableMixin))
+    await render(hbs`{{fadable-component}}`)
+    assert.equal(this.element.textContent.trim(), '')
+  })
+})

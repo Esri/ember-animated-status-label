@@ -1,7 +1,4 @@
-{{# if isPending }}
-  <span class='{{ pendingClassName }}'>{{ fa-icon 'circle-o-notch' spin=true }} {{ pendingText }}</span>
-{{ else if isConfirming }}
-  <span class='{{ confirmationClassName }}'>{{ fa-icon confirmationIconName }} {{ confirmationText }}</span>
-{{ else }}
-  {{ yield }}
-{{/ if }}
+{{yield (hash
+    isSettled=isSettled
+    isPending=isPending
+    isConfirming=isConfirming)}}

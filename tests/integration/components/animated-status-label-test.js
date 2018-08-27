@@ -1,128 +1,73 @@
-import Ember from 'ember';
-import { moduleForComponent, test } from 'ember-qunit';
-import hbs from 'htmlbars-inline-precompile';
-import startApp from '../../helpers/start-app';
+import RSVP from 'rsvp'
+import { module, test } from 'qunit'
+import { setupRenderingTest } from 'ember-qunit'
+import { render, waitUntil } from '@ember/test-helpers'
+import { setProperties } from '@ember/object'
+import hbs from 'htmlbars-inline-precompile'
 
-const { RSVP, run } = Ember;
+module('Integration | Component | animated-status-label', function(hooks) {
+  setupRenderingTest(hooks)
 
-moduleForComponent('animated-status-label', 'Integration | Component | animated status label', {
-  integration: true,
-  beforeEach() {
-    window.APP = startApp();
+  hooks.beforeEach(function() {
+    setProperties(this, {
+      pendingContent: 'PENDING',
+      confirmationContent: 'CONFIRMATION',
+      settledContent: 'SETTLED',
+      confirmationDuration: 0,
+      onConfirmationFinished: () => {}
+    })
+    this.renderComponent = async props => {
+      setProperties(this, props)
+      await render(hbs`
+        {{#animated-status-label
+            promise=promise
+            confirmationDuration=confirmationDuration
+            onConfirmationFinished=(action onConfirmationFinished)
+            as |label|}}
+          {{#if label.isSettled}}
+            {{settledContent}}
+          {{else if label.isPending}}
+            {{pendingContent}}
+          {{else if label.isConfirming}}
+            {{confirmationContent}}
+          {{/if}}
+        {{/animated-status-label}}
+      `)
+    }
+  })
 
-    this.set('pendingText', 'PENDING');
-    this.set('confirmationText', 'CONFIRMATION');
-  }
-});
+  test('when the promise is undefined, the component shows settled text', async function(assert) {
+    await this.renderComponent({ promise: undefined })
+    assert.equal(this.element.textContent.trim(), this.settledContent)
+  })
 
-test('it renders', function(assert) {
+  test('it handles resolving promises', async function(assert) {
+    await this.renderComponent({ promise: new RSVP.resolve() })
+    assert.equal(this.element.textContent.trim(), this.pendingContent, 'initially shows pending content')
+    await waitUntil(() => this.element.textContent.trim() !== this.pendingContent)
+    assert.equal(this.element.textContent.trim(), this.confirmationContent, 'transitions to confirmation content')
+    await waitUntil(() => this.element.textContent.trim() !== this.confirmationContent)
+    assert.equal(this.element.textContent.trim(), this.settledContent, 'transitions to settled content')
+  })
 
-  // Set any properties with this.set('myProperty', 'value');
-  // Handle any actions with this.on('myAction', function(val) { ... });" + EOL + EOL +
+  test('it handles rejecting promises', async function(assert) {
+    await this.renderComponent({ promise: new RSVP.reject() })
+    assert.equal(this.element.textContent.trim(), this.pendingContent, 'initially shows pending content')
+    await waitUntil(() => this.element.textContent.trim() !== this.pendingContent)
+    assert.equal(this.element.textContent.trim(), this.settledContent, 'transitions to settled content')
+  })
 
-  this.render(hbs`{{animated-status-label}}`);
-
-  assert.equal(this.$().text().trim(), '');
-
-  // Template block usage:" + EOL +
-  this.render(hbs`
-    {{#animated-status-label}}
-      template block text
-    {{/animated-status-label}}
-  `);
-
-  assert.equal(this.$().text().trim(), 'template block text');
-});
-
-test('when the promise is null, the component yields', function(assert) {
-  assert.expect(1);
-
-  this.render(hbs`
-   {{#animated-status-label}}
-     yielded content
-   {{/animated-status-label}}
-  `);
-
-  assert.equal(this.$().text().trim(), 'yielded content');
-});
-
-test('pending text shown when promise is pending', function(assert) {
-  assert.expect(1);
-
-  this.set('promise', new RSVP.Promise(() => {}));
-
-  this.render(hbs`
-   {{#animated-status-label
-     promise=promise
-     pendingText=pendingText}}
-     yielded content
-   {{/animated-status-label}}
-  `);
-
-  andThen(() => {
-    assert.equal(this.$().text().trim(), 'PENDING');
-  });
-});
-
-test('confirmation text shown when promise is resolved', function(assert) {
-  assert.expect(1);
-
-  this.set('promise', RSVP.resolve());
-
-  this.render(hbs`
-   {{#animated-status-label
-     promise=promise
-     pendingText=pendingText
-     confirmationText=confirmationText
-     fadeAnimationDuration=0}}
-     yielded content
-   {{/animated-status-label}}
-  `);
-
-  andThen(() => {
-    assert.equal(this.$().text().trim(), 'CONFIRMATION');
-  });
-});
-
-test('label yields after confirmation is complete', function(assert) {
-  assert.expect(1);
-
-  this.set('promise', RSVP.resolve());
-
-  this.render(hbs`
-   {{#animated-status-label
-     promise=promise
-     pendingText=pendingText
-     confirmationText=confirmationText
-     fadeAnimationDuration=0
-     confirmationDuration=0}}
-     yielded content
-   {{/animated-status-label}}
-  `);
-
-  andThen(() => {
-    assert.equal(this.$().text().trim(), 'yielded content');
-  });
-});
-
-test('label yields when promise is rejected', function(assert) {
-  assert.expect(1);
-
-  this.set('promise', RSVP.reject());
-
-  this.render(hbs`
-   {{#animated-status-label
-     promise=promise
-     pendingText=pendingText
-     confirmationText=confirmationText
-     fadeAnimationDuration=0}}
-     yielded content
-   {{/animated-status-label}}
-  `);
-
-  let done = assert.async();
-  run.next(() => {
-    assert.equal(this.$().text().trim(), 'yielded content');
-    done();
-  });
-});
+  test('it fires onConfirmationFinished after showing the confirmation', async function(assert) {
+    assert.expect(1)
+    let hasShownConfirmation = false
+    let hasShownSettled = false
+    await this.renderComponent({
+      promise: new RSVP.resolve(),
+      onConfirmationFinished: () => assert.ok(hasShownConfirmation && !hasShownSettled)
+    })
+    await waitUntil(() => this.element.textContent.trim() !== this.pendingContent)
+    hasShownConfirmation = this.element.textContent.trim() === this.confirmationContent
+    await waitUntil(() => this.element.textContent.trim() !== this.confirmationContent)
+    hasShownSettled = this.element.textContent.trim() === this.settledContent
+  })
+})

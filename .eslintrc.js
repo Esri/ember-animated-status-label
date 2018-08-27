@@ -1,35 +1,72 @@
 module.exports = {
   root: true,
   parserOptions: {
-    ecmaVersion: 6,
+    ecmaVersion: 2017,
     sourceType: 'module'
   },
+  plugins: [
+    'ember'
+  ],
   extends: [
     'eslint:recommended',
-    'plugin:ember-suave/recommended'
+    'plugin:ember/recommended'
   ],
   env: {
-    browser: true,
-    jquery: true
+    browser: true
   },
   rules: {
-    // 'plugin:ember-suave/recommended' customization
-    'array-bracket-spacing': [ 'error', 'always', {
-      'objectsInArrays': false
-    }],
+    'array-bracket-spacing': [ 'error', 'always', { objectsInArrays: false } ],
     'arrow-parens': [ 'error', 'as-needed' ],
-    'camelcase': 'off',
-    'ember-suave/no-const-outside-module-scope': 'off',
-    'ember-suave/require-access-in-comments': 'off',
-    'new-cap': 'off',
-    'spaced-comment': 'off',
-    'no-multi-spaces': 'error',
-    'func-call-spacing': 'error', // suave's no-spaced-func rule has been deprecated
+    'ember/no-jquery': 'error',
+    'ember/order-in-components': 'error',
+    'ember/order-in-controllers': 'error',
+    'ember/order-in-models': 'error',
+    'ember/order-in-routes': 'error',
+    'ember/use-ember-get-and-set': ['error', { ignoreThisExpressions: false } ],
+    'no-unexpected-multiline': 'error',
+    'quotes': [ 'error', 'single', { avoidEscape: true, allowTemplateLiterals: true } ],
+    'semi': [ 'error', 'never' ],
+    'indent': ["error", 2, { "SwitchCase": 1 }],
+
+    // inspired by eslint-pugin-ember-suave (DockYard)
     'eol-last': [ 'error', 'always' ],
-    'quotes': [ 'error', 'single', {
-      'avoidEscape': true,
-      'allowTemplateLiterals': true
-    }],
-    'one-var': 'off'
-  }
+    'generator-star-spacing': [ 'error', { before: false, after: true } ],
+    'no-useless-rename': 'error',
+    'no-var': 'error',
+    'object-shorthand': [ 'error', 'always' ],
+    'prefer-destructuring': 'error',
+    'prefer-spread': 'error',
+    'prefer-template': 'error',
+  },
+  overrides: [
+    // node files
+    {
+      files: [
+        'ember-cli-build.js',
+        'index.js',
+        'testem.js',
+        'blueprints/*/index.js',
+        'config/**/*.js',
+        'tests/dummy/config/**/*.js'
+      ],
+      excludedFiles: [
+        'addon/**',
+        'addon-test-support/**',
+        'app/**',
+        'tests/dummy/app/**'
+      ],
+      parserOptions: {
+        sourceType: 'script',
+        ecmaVersion: 2015
+      },
+      env: {
+        browser: false,
+        node: true
+      },
+      plugins: ['node'],
+      rules: Object.assign({}, require('eslint-plugin-node').configs.recommended.rules, {
+        // add your custom rules and overrides for node files here
+      })
+    }
+  ]
 };
