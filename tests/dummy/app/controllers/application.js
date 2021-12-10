@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-classic-classes */
 import Controller from '@ember/controller'
 import RSVP from 'rsvp'
 import { action, set } from '@ember/object'
