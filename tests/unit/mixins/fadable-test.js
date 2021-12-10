@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-new-mixins */
 import Component from '@ember/component'
 import FadableMixin from 'ember-animated-status-label/mixins/fadable'
 import hbs from 'htmlbars-inline-precompile'
