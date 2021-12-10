@@ -1,6 +1,6 @@
 import Controller from '@ember/controller'
 import RSVP from 'rsvp'
-import { action, get, set } from '@ember/object'
+import { action, set } from '@ember/object'
 
 export default Controller.extend({
 
@@ -11,11 +11,11 @@ export default Controller.extend({
   }),
 
   resolve: action(function() {
-    get(this, 'deferred').resolve()
+    this.deferred.resolve()
   }),
 
   reject: action(function() {
-    get(this, 'deferred').reject()
+    this.deferred.reject()
   }),
 
 })

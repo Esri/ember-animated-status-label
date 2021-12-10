@@ -1,6 +1,6 @@
 /* eslint-disable ember/no-new-mixins */
 import Mixin from '@ember/object/mixin'
-import { get, set } from '@ember/object'
+import { set } from '@ember/object'
 import { on } from '@ember/object/evented'
 import { task, waitForProperty } from 'ember-concurrency'
 
@@ -15,20 +15,20 @@ export default Mixin.create({
 
   _observeAnimationEnd: on('didInsertElement', function() {
     this.element.addEventListener('animationend', event => {
-      if (get(this, '_isFadingIn') && event.animationName === get(this, 'fadeInAnimationName')) {
+      if (this._isFadingIn && event.animationName === this.fadeInAnimationName) {
         set(this, '_isFadingIn', false)
-      } else if (get(this, '_isFadingOut') && event.animationName === get(this, 'fadeOutAnimationName')) {
+      } else if (this._isFadingOut && event.animationName === this.fadeOutAnimationName) {
         set(this, '_isFadingOut', false)
       }
     })
   }),
 
   fadeIn() {
-    return get(this, '_fadeInTask').perform()
+    return this._fadeInTask.perform()
   },
 
   fadeOut() {
-    return get(this, '_fadeOutTask').perform()
+    return this._fadeOutTask.perform()
   },
 
   _fadeInTask: task(function* () {
