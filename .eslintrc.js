@@ -15,22 +15,22 @@ module.exports = {
     browser: true
   },
   rules: {
-    'array-bracket-spacing': [ 'error', 'always', { objectsInArrays: false } ],
+    'array-bracket-spacing': [ 'error', 'always', { objectsInArrays: false }],
     'arrow-parens': [ 'error', 'as-needed' ],
     'ember/no-jquery': 'error',
     'ember/order-in-components': 'error',
     'ember/order-in-controllers': 'error',
     'ember/order-in-models': 'error',
     'ember/order-in-routes': 'error',
-    'ember/use-ember-get-and-set': ['error', { ignoreThisExpressions: false } ],
+    'ember/use-ember-get-and-set': [ 'error', { ignoreThisExpressions: false }],
     'no-unexpected-multiline': 'error',
-    'quotes': [ 'error', 'single', { avoidEscape: true, allowTemplateLiterals: true } ],
+    'quotes': [ 'error', 'single', { avoidEscape: true, allowTemplateLiterals: true }],
     'semi': [ 'error', 'never' ],
-    'indent': ["error", 2, { "SwitchCase": 1 }],
+    'indent': [ 'error', 2, { 'SwitchCase': 1 }],
 
     // inspired by eslint-pugin-ember-suave (DockYard)
     'eol-last': [ 'error', 'always' ],
-    'generator-star-spacing': [ 'error', { before: false, after: true } ],
+    'generator-star-spacing': [ 'error', { before: false, after: true }],
     'no-useless-rename': 'error',
     'no-var': 'error',
     'object-shorthand': [ 'error', 'always' ],
@@ -42,6 +42,7 @@ module.exports = {
     // node files
     {
       files: [
+        '.eslintrc.js',
         '.template-lintrc.js',
         'ember-cli-build.js',
         'index.js',
@@ -64,10 +65,10 @@ module.exports = {
         browser: false,
         node: true
       },
-      plugins: ['node'],
+      plugins: [ 'node' ],
       rules: Object.assign({}, require('eslint-plugin-node').configs.recommended.rules, {
         // add your custom rules and overrides for node files here
       })
     }
   ]
-};
+}
