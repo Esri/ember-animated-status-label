@@ -1,3 +1,4 @@
+/* eslint-disable qunit/no-assert-logical-expression */
 import RSVP from 'rsvp'
 import { module, test } from 'qunit'
 import { setupRenderingTest } from 'ember-qunit'
