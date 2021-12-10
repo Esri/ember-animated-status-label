@@ -1,9 +1,9 @@
 'use strict'
 
 module.exports = {
-  name: 'ember-animated-status-label',
+  name: require('./package').name,
 
   included(app) {
     app.import('vendor/animated-status-label.css')
-  }
+  },
 }

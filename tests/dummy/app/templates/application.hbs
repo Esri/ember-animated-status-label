@@ -1,7 +1,7 @@
 <div>
-  <button {{action 'startTask'}}>Start Task</button>
-  <button {{action 'resolve'}}>Resolve</button>
-  <button {{action 'reject'}}>Reject</button>
+  <button {{action "startTask"}}>Start Task</button>
+  <button {{action "resolve"}}>Resolve</button>
+  <button {{action "reject"}}>Reject</button>
 </div>
 {{#animated-status-label promise=deferred.promise as |label|}}
   {{#if label.isSettled}}
