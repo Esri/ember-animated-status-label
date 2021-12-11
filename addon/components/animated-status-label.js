@@ -1,13 +1,11 @@
-/* eslint-disable ember/no-mixins */
 /* eslint-disable ember/no-classic-components */
 /* eslint-disable ember/no-classic-classes */
 /* eslint-disable ember/no-component-lifecycle-hooks */
 /* eslint-disable ember/require-tagless-components */
 import Component from '@ember/component'
-import Fadable from '../mixins/fadable'
 import layout from '../templates/components/animated-status-label'
 import { computed, set } from '@ember/object'
-import { task, timeout } from 'ember-concurrency'
+import { task, timeout, waitForProperty } from 'ember-concurrency'
 
 const StatusLabelState = {
   SETTLED: 0,
@@ -15,10 +13,11 @@ const StatusLabelState = {
   CONFIRMING: 2
 }
 
-export default Component.extend(Fadable, {
+export default Component.extend({
   layout,
 
   classNames: [ 'animated-status-label' ],
+  classNameBindings: [ '_isFadingIn:fade-in', '_isFadingOut:fade-out' ],
 
   confirmationDuration: 1500,
   promise: undefined,
@@ -28,6 +27,8 @@ export default Component.extend(Fadable, {
   fadeInAnimationName: 'animated-status-label-fade-in',
 
   _activePromise: undefined,
+  _isFadingIn: false,
+  _isFadingOut: false,
 
   onConfirmationFinished() {},
 
@@ -46,6 +47,27 @@ export default Component.extend(Fadable, {
       this._animateTask.perform(this.promise)
     }
   },
+
+  didInsertElement() {
+    this._super(...arguments)
+    this.element.addEventListener('animationend', event => {
+      if (this._isFadingIn && event.animationName === this.fadeInAnimationName) {
+        set(this, '_isFadingIn', false)
+      } else if (this._isFadingOut && event.animationName === this.fadeOutAnimationName) {
+        set(this, '_isFadingOut', false)
+      }
+    })
+  },
+
+  _fadeInTask: task(function* () {
+    set(this, '_isFadingIn', true)
+    yield waitForProperty(this, '_isFadingIn', false)
+  }),
+
+  _fadeOutTask: task(function* () {
+    set(this, '_isFadingOut', true)
+    yield waitForProperty(this, '_isFadingOut', false)
+  }),
 
   _animateTask: task(function* (promise) {
     set(this, '_activePromise', promise)
@@ -67,12 +89,12 @@ export default Component.extend(Fadable, {
     if (this.status === state) {
       return
     }
-    yield this.fadeOut()
+    yield this._fadeOutTask.perform()
     if (this.status === StatusLabelState.CONFIRMING && state === StatusLabelState.SETTLED) {
       this.onConfirmationFinished()
     }
     set(this, 'status', state)
-    yield this.fadeIn()
+    yield this._fadeInTask.perform()
   }).enqueue()
 
 })
