@@ -31,7 +31,7 @@
   "dependencies": {
     "ember-cli-babel": "^7.26.6",
     "ember-cli-htmlbars": "^5.7.1",
-    "ember-concurrency": "^0.8.19"
+    "ember-concurrency": "^2.2.0"
   },
   "devDependencies": {
     "@ember/optional-features": "^2.0.0",
@@ -41,7 +41,7 @@
     "@glimmer/tracking": "^1.0.4",
     "babel-eslint": "^10.1.0",
     "broccoli-asset-rev": "^3.0.0",
-    "ember-auto-import": "^1.11.3",
+    "ember-auto-import": "^2.2.4",
     "ember-cli": "~3.28.4",
     "ember-cli-autoprefixer": "~0.8.1",
     "ember-cli-dependency-checker": "~3.2.0",
@@ -67,7 +67,8 @@
     "loader.js": "^4.7.0",
     "npm-run-all": "^4.1.5",
     "qunit": "^2.16.0",
-    "qunit-dom": "^1.6.0"
+    "qunit-dom": "^1.6.0",
+    "webpack": "^5.65.0"
   },
   "keywords": [
     "promise",
