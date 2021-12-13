@@ -4,7 +4,8 @@
 /* eslint-disable ember/require-tagless-components */
 import Component from '@ember/component'
 import layout from '../templates/components/animated-status-label'
-import { computed, set } from '@ember/object'
+import { equal } from '@ember/object/computed'
+import { set } from '@ember/object'
 import { task, timeout, waitForProperty } from 'ember-concurrency'
 
 const StatusLabelState = {
@@ -32,9 +33,9 @@ export default Component.extend({
 
   onConfirmationFinished() {},
 
-  isSettled: computed.equal('status', StatusLabelState.SETTLED),
-  isPending: computed.equal('status', StatusLabelState.PENDING),
-  isConfirming: computed.equal('status', StatusLabelState.CONFIRMING),
+  isSettled: equal('status', StatusLabelState.SETTLED),
+  isPending: equal('status', StatusLabelState.PENDING),
+  isConfirming: equal('status', StatusLabelState.CONFIRMING),
 
   init() {
     this._super(...arguments)

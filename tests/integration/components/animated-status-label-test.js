@@ -20,19 +20,19 @@ module('Integration | Component | animated-status-label', function(hooks) {
     this.renderComponent = async props => {
       setProperties(this, props)
       await render(hbs`
-        {{#animated-status-label
-            promise=promise
-            confirmationDuration=confirmationDuration
-            onConfirmationFinished=(action onConfirmationFinished)
-            as |label|}}
+        <AnimatedStatusLabel
+            @promise={{this.promise}}
+            @confirmationDuration={{this.confirmationDuration}}
+            @onConfirmationFinished={{this.onConfirmationFinished}}
+            as |label|>
           {{#if label.isSettled}}
-            {{settledContent}}
+            {{this.settledContent}}
           {{else if label.isPending}}
-            {{pendingContent}}
+            {{this.pendingContent}}
           {{else if label.isConfirming}}
-            {{confirmationContent}}
+            {{this.confirmationContent}}
           {{/if}}
-        {{/animated-status-label}}
+        </AnimatedStatusLabel>
       `)
     }
   })
