@@ -1,9 +1,9 @@
 <div>
-  <button {{action 'startTask'}}>Start Task</button>
-  <button {{action 'resolve'}}>Resolve</button>
-  <button {{action 'reject'}}>Reject</button>
+  <button type="button" {{on "click" this.startTask}}>Start Task</button>
+  <button type="button" {{on "click" this.resolve}}>Resolve</button>
+  <button type="button" {{on "click" this.reject}}>Reject</button>
 </div>
-{{#animated-status-label promise=deferred.promise as |label|}}
+<AnimatedStatusLabel @promise={{this.deferred.promise}} as |label|>
   {{#if label.isSettled}}
     settled
   {{else if label.isConfirming}}
@@ -11,4 +11,4 @@
   {{else if label.isPending}}
     pending...
   {{/if}}
-{{/animated-status-label}}
+</AnimatedStatusLabel>
